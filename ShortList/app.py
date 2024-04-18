@@ -19,7 +19,7 @@ class Url(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(164), index=True)
     encoded = db.Column(db.String(64), index=True)
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -32,23 +32,6 @@ class Url(db.Model):
 
 with app.app_context():
     db.create_all()
-
-@app.route('/')
-def index():
-    return 'Hello, World!'
-
-@app.route('/sample_json')
-def sample_json():
-    data = {
-        "users": [
-            {"id": 1, "name": "John Doe", "email": "john@example.com"},
-            {"id": 2, "name": "Jane Smith", "email": "jane@example.com"},
-            {"id": 3, "name": "Emily Jones", "email": "emily@example.com"}
-        ],
-        "success": True,
-        "message": "User data fetched successfully"
-    }
-    return jsonify(data)
 
 def encodeUrl(url):
     pattern = re.compile(r'^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$')
@@ -70,6 +53,24 @@ def encode():
         db.session.rollback()
         print("Error adding data to the database:", str(e))
     return jsonify(data)
+
+
+@app.route('/decode' , methods = ['POST'])
+def decode():
+    data = request.get_json()
+    print(data)
+    try:
+        url = Url.query.filter_by(encoded=data['encoded']).first()
+        if url:
+            return jsonify({'decoded_url': url.url})
+        else:
+            return jsonify({'error': 'URL not found'}), 404
+    except Exception as e:
+        db.session.rollback()
+        print("Error adding data to the database:", str(e))
+
+
+
 
 @app.route('/urls')
 def get_urls():

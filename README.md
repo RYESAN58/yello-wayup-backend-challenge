@@ -17,7 +17,7 @@ ShortLink is a URL shortening service where you enter a URL such as https://yell
 - There is no restriction on how your encode/decode algorithm should work. You need to ensure that a URL can be encoded to a short URL and the short URL can be decoded to the original URL. You can persist the short URLs and Long URLs in a database, but it's optional.
 ### Optional Tasks:
 - Add authentication and authorization to ensure that only authenticated users can use the service to encode URLs.
- 
+
 ## Evaluation Criteria
 * Coding Language best practices
 * API implemented featuring an `/encode` and `/decode` endpoint
